@@ -24,7 +24,7 @@ app.get("/historic", async (req, res) => {
 
   try {
     const result = await client.query("SELECT * FROM historic");
-    res.json(result);
+    res.json(result.rows);
   } catch (e) {
     console.error(e.message, e.stack);
     res.status(500).json({ error: "Erro ao obter os dados" });
