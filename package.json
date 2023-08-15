@@ -4,7 +4,7 @@
   "description": "api of website CoinSentry",
   "main": "nodemon index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Igor Gomes Soares",
@@ -17,7 +17,7 @@
     "pg-pool": "^3.6.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "nodemon": "^2.0.3"
   }
 }
