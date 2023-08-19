@@ -16,12 +16,8 @@ async function getDatabaseConnection() {
     let pool = new Pool(dbConfig);
     let client = await pool.connect();
 
-    console.log("Hire a");
-
     return client;
   }
-
-  console.log("Hire");
 
   return connection;
 }
@@ -40,7 +36,7 @@ async function query(sql, values) {
     console.error("Error executing query:", error);
     return error;
   } finally {
-    if (con) {
+    if (conn) {
       conn.release();
     }
   }
