@@ -1,35 +1,25 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
-var Pool = require("pg-pool");
-
+const { query } = require("./database/connection");
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
-
-const dbConfig = {
-  user: PGUSER,
-  password: PGPASSWORD,
-  database: PGDATABASE,
-  host: PGHOST,
-  ssl: true,
-};
-
-app.get("/historic", async (req, res) => {
-  let pool = new Pool(dbConfig);
-  let client = await pool.connect();
-
+app.get("/historic", async (_, res) => {
   try {
-    const result = await client.query("SELECT * FROM historic");
-    res.json(result.rows);
-  } catch (e) {
-    console.error(e.message, e.stack);
-    res.status(500).json({ error: "Erro ao obter os dados" });
-  } finally {
-    client.release();
+    const { rows } = await query("SELECT * FROM historic");
+
+    if (rows.length === 0) {
+      res.status(204).send();
+    } else {
+      res.json(rows);
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res
+      .status(500)
+      .json({ error: "Error fetching historic from the database" });
   }
 });
 
