@@ -63,9 +63,25 @@ async function addItem({ title, operation, category, valueItem, dateInput }) {
   }
 }
 
+async function getHistoricDetails() {
+  try {
+    const { rows } = await query(`SELECT 
+      SUM(CASE WHEN operation = 'entrada' THEN value_item ELSE 0 END) AS entradaTotal,
+      SUM(CASE WHEN operation = 'saída' THEN value_item ELSE 0 END) AS saidaTotal,
+      SUM(value_item) AS total
+    FROM historic
+  `);
+
+    return rows[0];
+  } catch (error) {
+    throw new Error("Error deleting a historic from the database");
+  }
+}
+
 module.exports = {
   getAllHistoric,
   deleteItem,
   updateItem,
   addItem,
+  getHistoricDetails,
 };

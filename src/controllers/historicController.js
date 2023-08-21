@@ -67,16 +67,33 @@ async function updateItem(req, res) {
 
 async function addItem(req, res) {
   try {
-    const item = await historicModel.addItem({
+    await historicModel.addItem({
       ...req.body,
     });
 
     res.json({ status: 200, message: "Sucesso ao adicionar item" });
   } catch (error) {
-    console.error("Error updating a historic from the database:", error);
+    console.error("Error inserting a historic from the database:", error);
     res.status(500).json({
       status: 500,
-      error: "Error updating a historic from the database",
+      error: "Error inserting a historic from the database",
+    });
+  }
+}
+
+async function getHistoricDetails(_, res) {
+  try {
+    const details = await historicModel.getHistoricDetails();
+
+    res.json({
+      status: 200,
+      details,
+    });
+  } catch (error) {
+    console.error("Error fetching historic details:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error fetching historic details from the database",
     });
   }
 }
@@ -86,4 +103,5 @@ module.exports = {
   deleteItem,
   updateItem,
   addItem,
+  getHistoricDetails,
 };
