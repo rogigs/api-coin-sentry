@@ -25,7 +25,7 @@ async function updateItem({
   title,
   operation,
   category,
-  valueItem,
+  value_item,
   dateInput,
 }) {
   try {
@@ -34,9 +34,9 @@ async function updateItem({
     SET title = '${title}',
       operation = '${operation}',
       category = '${category}',
-      value_item = '${valueItem}',
-      date_input = '${dateInput}'  /
-      WHERE id = ${id};`);
+      value_item = '${value_item}',
+      date_input = '${dateInput}'  
+      WHERE id = ${id}`);
 
     return rowCount;
   } catch (error) {
