@@ -29,7 +29,7 @@ async function deleteItem(req, res) {
         .status(404)
         .json({ error: "Error fetching item don't found from the database" });
     } else {
-      res.json({ status: 404, message: "Sucesso ao deletar item" });
+      res.json({ status: 200, message: "Sucesso ao deletar item" });
     }
   } catch (error) {
     console.error("Error deleting a historic from the database:", error);
@@ -40,7 +40,35 @@ async function deleteItem(req, res) {
   }
 }
 
+async function updateItem(req, res) {
+  try {
+    const item = await historicModel.updateItem({
+      id: req.params.id,
+      ...req.body,
+    });
+    const hasItem = item > 0;
+
+    if (!hasItem) {
+      res
+        .status(404)
+        .json({
+          status: 404,
+          error: "Error fetching item don't found from the database",
+        });
+    } else {
+      res.json({ status: 200, message: "Sucesso ao atualizar item" });
+    }
+  } catch (error) {
+    console.error("Error updating a historic from the database:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error updating a historic from the database",
+    });
+  }
+}
+
 module.exports = {
   getHistoric,
   deleteItem,
+  updateItem,
 };

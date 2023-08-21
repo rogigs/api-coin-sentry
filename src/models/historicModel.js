@@ -20,7 +20,32 @@ async function deleteItem({ id }) {
   }
 }
 
+async function updateItem({
+  id,
+  title,
+  operation,
+  category,
+  valueItem,
+  dateInput,
+}) {
+  try {
+    // TODO: Verify type of date
+    const { rowCount } = await query(`UPDATE historic
+      SET title = '${title}',
+        operation = '${operation}',
+        category = '${category}',
+        value_item = '${valueItem}',
+        date_input = '${dateInput}'  /
+        WHERE id = ${id};`);
+
+    return rowCount;
+  } catch (error) {
+    throw new Error("Error updating a historic from the database");
+  }
+}
+
 module.exports = {
   getAllHistoric,
   deleteItem,
+  updateItem,
 };
