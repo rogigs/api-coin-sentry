@@ -66,8 +66,8 @@ async function addItem({ title, operation, category, value_item, date_input }) {
 async function getHistoricDetails() {
   try {
     const { rows } = await query(`SELECT 
-      SUM(CASE WHEN operation = 'entrada' THEN value_item ELSE 0 END) AS entradaTotal,
-      SUM(CASE WHEN operation = 'saída' THEN value_item ELSE 0 END) AS saidaTotal,
+      SUM(CASE WHEN operation = 'entrada' THEN value_item ELSE 0 END) AS entrada_total,
+      SUM(CASE WHEN operation = 'saída' THEN value_item ELSE 0 END) AS saida_total,
       SUM(value_item) AS total
     FROM historic
   `);

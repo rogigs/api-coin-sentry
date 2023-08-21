@@ -88,7 +88,11 @@ async function getHistoricDetails(_, res) {
 
     res.json({
       status: 200,
-      details,
+      details: {
+        entrada_total: +details.entrada_total,
+        saida_total: +details.saida_total,
+        total: +details.total,
+      },
     });
   } catch (error) {
     console.error("Error fetching historic details:", error);
