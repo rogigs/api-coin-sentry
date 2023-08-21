@@ -31,12 +31,31 @@ async function updateItem({
   try {
     // TODO: Verify type of date
     const { rowCount } = await query(`UPDATE historic
-      SET title = '${title}',
-        operation = '${operation}',
-        category = '${category}',
-        value_item = '${valueItem}',
-        date_input = '${dateInput}'  /
-        WHERE id = ${id};`);
+    SET title = '${title}',
+      operation = '${operation}',
+      category = '${category}',
+      value_item = '${valueItem}',
+      date_input = '${dateInput}'  /
+      WHERE id = ${id};`);
+
+    return rowCount;
+  } catch (error) {
+    throw new Error("Error updating a historic from the database");
+  }
+}
+
+async function addItem({ title, operation, category, valueItem, dateInput }) {
+  try {
+    // TODO: Verify type of date
+    const { rowCount } =
+      await query(`INSERT INTO historic (title, operation, category, value_item, date_input) 
+    VALUES(
+      '${title}',
+      '${operation}',
+      '${category}',
+      '${valueItem}',
+      '${dateInput}'
+      )`);
 
     return rowCount;
   } catch (error) {
@@ -48,4 +67,5 @@ module.exports = {
   getAllHistoric,
   deleteItem,
   updateItem,
+  addItem,
 };

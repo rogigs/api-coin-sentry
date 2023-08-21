@@ -49,15 +49,29 @@ async function updateItem(req, res) {
     const hasItem = item > 0;
 
     if (!hasItem) {
-      res
-        .status(404)
-        .json({
-          status: 404,
-          error: "Error fetching item don't found from the database",
-        });
+      res.status(404).json({
+        status: 404,
+        error: "Error fetching item don't found from the database",
+      });
     } else {
       res.json({ status: 200, message: "Sucesso ao atualizar item" });
     }
+  } catch (error) {
+    console.error("Error updating a historic from the database:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error updating a historic from the database",
+    });
+  }
+}
+
+async function addItem(req, res) {
+  try {
+    const item = await historicModel.addItem({
+      ...req.body,
+    });
+
+    res.json({ status: 200, message: "Sucesso ao adicionar item" });
   } catch (error) {
     console.error("Error updating a historic from the database:", error);
     res.status(500).json({
@@ -71,4 +85,5 @@ module.exports = {
   getHistoric,
   deleteItem,
   updateItem,
+  addItem,
 };
