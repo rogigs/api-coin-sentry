@@ -26,7 +26,7 @@ async function updateItem({
   operation,
   category,
   value_item,
-  dateInput,
+  date_input,
 }) {
   try {
     // TODO: Verify type of date
@@ -35,7 +35,7 @@ async function updateItem({
       operation = '${operation}',
       category = '${category}',
       value_item = '${value_item}',
-      date_input = '${dateInput}'  
+      date_input = '${date_input}'  
       WHERE id = ${id}`);
 
     return rowCount;
