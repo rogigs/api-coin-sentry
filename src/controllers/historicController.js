@@ -20,8 +20,7 @@ async function getHistoric(_, res) {
 
 async function deleteItem(req, res) {
   try {
-    const id = req.params.id;
-    const item = await historicModel.deleteItem({ id });
+    const item = await historicModel.deleteItem({ id: req.params.id });
     const hasItem = item > 0;
 
     if (!hasItem) {
@@ -98,10 +97,28 @@ async function getHistoricDetails(_, res) {
   }
 }
 
+async function getItem(req, res) {
+  try {
+    const item = await historicModel.getItem({ id: req.params.id });
+
+    res.json({
+      status: 200,
+      item,
+    });
+  } catch (error) {
+    console.error("Error fetching item:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error fetching item from the database",
+    });
+  }
+}
+
 module.exports = {
   getHistoric,
   deleteItem,
   updateItem,
   addItem,
   getHistoricDetails,
+  getItem,
 };

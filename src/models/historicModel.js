@@ -44,7 +44,7 @@ async function updateItem({
   }
 }
 
-async function addItem({ title, operation, category, valueItem, dateInput }) {
+async function addItem({ title, operation, category, value_item, date_input }) {
   try {
     // TODO: Verify type of date
     const { rowCount } =
@@ -53,8 +53,8 @@ async function addItem({ title, operation, category, valueItem, dateInput }) {
       '${title}',
       '${operation}',
       '${category}',
-      '${valueItem}',
-      '${dateInput}'
+      '${value_item}',
+      '${date_input}'
       )`);
 
     return rowCount;
@@ -78,10 +78,21 @@ async function getHistoricDetails() {
   }
 }
 
+async function getItem({ id }) {
+  try {
+    const { rows } = await query(`SELECT * FROM historic WHERE id = ${id}`);
+
+    return rows[0];
+  } catch (error) {
+    throw new Error("Error fetching item from the database");
+  }
+}
+
 module.exports = {
   getAllHistoric,
   deleteItem,
   updateItem,
   addItem,
   getHistoricDetails,
+  getItem,
 };
