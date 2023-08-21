@@ -44,6 +44,7 @@ async function updateItem(req, res) {
     const item = await historicModel.updateItem({
       id: req.params.id,
       ...req.body,
+      value_item: +req.body.value_item,
     });
     const hasItem = item > 0;
 
@@ -68,6 +69,7 @@ async function addItem(req, res) {
   try {
     await historicModel.addItem({
       ...req.body,
+      value_item: +req.body.value_item,
     });
 
     res.json({ status: 200, message: "Sucesso ao adicionar item" });
