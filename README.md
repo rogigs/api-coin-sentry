@@ -42,3 +42,10 @@ To run this project, you will need to add the following environment variables to
   PGUSER='your-user'
   PGPASSWORD='your-password'
 ```
+
+## Roadmap
+
+1. Add routes ✅
+2. Add ORM
+3. Add documentation of API(Swagger)
+4. Add tests
