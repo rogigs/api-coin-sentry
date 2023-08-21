@@ -4,16 +4,17 @@ async function getHistoric(_, res) {
   try {
     const historic = await historicModel.getAllHistoric();
 
-    if (historic.length === 0) {
-      res.status(204).send();
+    if (!historic) {
+      res.status(204).send({ status: 204, historic: [] });
     } else {
-      res.json(historic);
+      res.json({ status: 200, historic });
     }
   } catch (error) {
     console.error("Error fetching all historic:", error);
-    res
-      .status(500)
-      .json({ error: "Error fetching all historic from the database" });
+    res.status(500).json({
+      status: 500,
+      error: "Error fetching all historic from the database",
+    });
   }
 }
 
