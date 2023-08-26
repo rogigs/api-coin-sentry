@@ -43,6 +43,14 @@ To run this project, you will need to add the following environment variables to
   PGPASSWORD='your-password'
 ```
 
+## Generate documentation
+
+To generate documentation run the following command
+
+```bash
+  npm run docs
+```
+
 ## Roadmap
 
 1. Add routes ✅
