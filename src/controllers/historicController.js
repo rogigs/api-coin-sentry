@@ -1,123 +1,132 @@
-const historicModel = require("../models/historicModel");
+const { Historic } = require("../entities/Historic");
+const { AppDataSource } = require("../database/dataSource");
 
 async function getHistoric(_, res) {
-  try {
-    const historic = await historicModel.getAllHistoric();
+  AppDataSource.initialize()
+    .then(async () => {
+      const historic = await AppDataSource.manager.find(Historic);
 
-    if (!historic) {
-      res.status(204).send({ status: 204, historic: [] });
-    } else {
-      res.json({ status: 200, historic });
-    }
-  } catch (error) {
-    console.error("Error fetching all historic:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error fetching all historic from the database",
+      res.json({ status: 200, historic, length: historic.length });
+    })
+    .catch((error) => {
+      if (error.message === 'No metadata for "Historic" was found.') {
+        res.status(204).send({ status: 204, historic: [] });
+      }
+
+      console.error(error);
+
+      res.status(500).json({
+        status: 500,
+        error: "Error fetching all historic from the database",
+      });
     });
-  }
 }
 
 async function deleteItem(req, res) {
-  try {
-    const item = await historicModel.deleteItem({ id: req.params.id });
-    const hasItem = item > 0;
+  AppDataSource.initialize()
+    .then(async () => {
+      const historicRepository = await AppDataSource.getRepository(Historic);
+      const itemToDelete = await historicRepository.findOne({
+        where: { id: req.params.id },
+      });
 
-    if (!hasItem) {
+      if (itemToDelete) {
+        await historicRepository.remove(itemToDelete);
+
+        res.json({ status: 200, message: "Sucesso ao deletar item" });
+      }
+    })
+    .catch((error) => {
       res
         .status(404)
         .json({ error: "Error fetching item don't found from the database" });
-    } else {
-      res.json({ status: 200, message: "Sucesso ao deletar item" });
-    }
-  } catch (error) {
-    console.error("Error deleting a historic from the database:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error deleting a historic from the database",
+
+      console.error("Error deleting a historic from the database:", error);
+      res.status(500).json({
+        status: 500,
+        error: "Error deleting a historic from the database",
+      });
     });
-  }
 }
 
 async function updateItem(req, res) {
-  try {
-    const item = await historicModel.updateItem({
-      id: req.params.id,
-      ...req.body,
-      value_item: +req.body.value_item,
-    });
-    const hasItem = item > 0;
-
-    if (!hasItem) {
-      res.status(404).json({
-        status: 404,
-        error: "Error fetching item don't found from the database",
+  AppDataSource.initialize()
+    .then(async () => {
+      const historicRepository = await AppDataSource.getRepository(Historic);
+      const itemToUpdate = await historicRepository.findOne({
+        where: { id: req.params.id },
       });
-    } else {
+
+      if (itemToUpdate) {
+        itemToUpdate.title = req.body.title;
+        itemToUpdate.operation = req.body.operation;
+        itemToUpdate.category = req.body.category;
+        itemToUpdate.value_item = +req.body.value_item;
+        itemToUpdate.date_input = req.body.date_input;
+
+        await historicRepository.save(itemToUpdate);
+      }
+
       res.json({ status: 200, message: "Sucesso ao atualizar item" });
-    }
-  } catch (error) {
-    console.error("Error updating a historic from the database:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error updating a historic from the database",
+    })
+    .catch((error) => {
+      if (error.message === 'No metadata for "Historic" was found.') {
+        res.status(404).json({
+          status: 404,
+          error: "Error fetching item don't found from the database",
+        });
+      }
+
+      console.error("Error updating a historic from the database:", error);
+      res.status(500).json({
+        status: 500,
+        error: "Error updating a historic from the database",
+      });
     });
-  }
 }
 
 async function addItem(req, res) {
-  try {
-    await historicModel.addItem({
-      ...req.body,
-      value_item: +req.body.value_item,
-    });
+  AppDataSource.initialize()
+    .then(async () => {
+      const historic = new Historic();
 
-    res.json({ status: 200, message: "Sucesso ao adicionar item" });
-  } catch (error) {
-    console.error("Error inserting a historic from the database:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error inserting a historic from the database",
+      historic.title = req.body.title;
+      historic.operation = req.body.operation;
+      historic.category = req.body.category;
+      historic.value_item = +req.body.value_item;
+      historic.date_input = req.body.date_input;
+
+      await AppDataSource.manager.save(historic);
+
+      res.json({ status: 200, message: "Sucesso ao adicionar item" });
+    })
+    .catch((error) => {
+      console.error("Error inserting a historic from the database:", error);
+      res.status(500).json({
+        status: 500,
+        error: "Error inserting a historic from the database",
+      });
     });
-  }
 }
 
 async function getHistoricDetails(_, res) {
-  try {
-    const details = await historicModel.getHistoricDetails();
-
-    res.json({
-      status: 200,
-      details: {
-        entrada_total: +details.entrada_total,
-        saida_total: +details.saida_total,
-        total: +details.total,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching historic details:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error fetching historic details from the database",
-    });
-  }
-}
-
-async function getItem(req, res) {
-  try {
-    const item = await historicModel.getItem({ id: req.params.id });
-
-    res.json({
-      status: 200,
-      item,
-    });
-  } catch (error) {
-    console.error("Error fetching item:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error fetching item from the database",
-    });
-  }
+  // try {
+  //   const details = await historicModel.getHistoricDetails();
+  //   res.json({
+  //     status: 200,
+  //     details: {
+  //       entrada_total: +details.entrada_total,
+  //       saida_total: +details.saida_total,
+  //       total: +details.total,
+  //     },
+  //   });
+  // } catch (error) {
+  //   console.error("Error fetching historic details:", error);
+  //   res.status(500).json({
+  //     status: 500,
+  //     error: "Error fetching historic details from the database",
+  //   });
+  // }
 }
 
 module.exports = {
@@ -126,5 +135,4 @@ module.exports = {
   updateItem,
   addItem,
   getHistoricDetails,
-  getItem,
 };
