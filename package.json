@@ -4,7 +4,7 @@
   "description": "api of website CoinSentry",
   "main": "nodemon index.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "ts-node-dev --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "doc": "node swagger.js"
   },
