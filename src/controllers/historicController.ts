@@ -1,7 +1,7 @@
-const { Historic } = require("../entities/Historic");
-const { AppDataSource } = require("../database/dataSource");
+import { Historic } from "../entities/Historic";
+import { AppDataSource } from "../database/dataSource";
 
-async function getHistoric(_, res) {
+export async function getHistoric(_, res) {
   AppDataSource.initialize()
     .then(async () => {
       const historic = await AppDataSource.manager.find(Historic);
@@ -22,7 +22,7 @@ async function getHistoric(_, res) {
     });
 }
 
-async function deleteItem(req, res) {
+export async function deleteItem(req, res) {
   AppDataSource.initialize()
     .then(async () => {
       const historicRepository = await AppDataSource.getRepository(Historic);
@@ -49,7 +49,7 @@ async function deleteItem(req, res) {
     });
 }
 
-async function updateItem(req, res) {
+export async function updateItem(req, res) {
   AppDataSource.initialize()
     .then(async () => {
       const historicRepository = await AppDataSource.getRepository(Historic);
@@ -85,7 +85,7 @@ async function updateItem(req, res) {
     });
 }
 
-async function addItem(req, res) {
+export async function addItem(req, res) {
   AppDataSource.initialize()
     .then(async () => {
       const historic = new Historic();
@@ -109,7 +109,7 @@ async function addItem(req, res) {
     });
 }
 
-async function getHistoricDetails(_, res) {
+export async function getHistoricDetails(_, res) {
   // try {
   //   const details = await historicModel.getHistoricDetails();
   //   res.json({
@@ -128,11 +128,3 @@ async function getHistoricDetails(_, res) {
   //   });
   // }
 }
-
-module.exports = {
-  getHistoric,
-  deleteItem,
-  updateItem,
-  addItem,
-  getHistoricDetails,
-};
