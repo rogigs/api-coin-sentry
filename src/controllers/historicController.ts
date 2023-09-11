@@ -101,21 +101,55 @@ export async function addItem(req, res) {
 }
 
 export async function getHistoricDetails(_, res) {
-  // try {
-  //   const details = await historicModel.getHistoricDetails();
-  //   res.json({
-  //     status: 200,
-  //     details: {
-  //       entrada_total: +details.entrada_total,
-  //       saida_total: +details.saida_total,
-  //       total: +details.total,
-  //     },
-  //   });
-  // } catch (error) {
-  //   console.error("Error fetching historic details:", error);
-  //   res.status(500).json({
-  //     status: 500,
-  //     error: "Error fetching historic details from the database",
-  //   });
-  // }
+  try {
+    const historic = connection.getRepository(Historic);
+
+    const { totalEntrada, totalSaida } = await historic
+      .createQueryBuilder()
+      .select(
+        "SUM(CASE WHEN operation = :entrada THEN value_item ELSE 0 END)",
+        "totalEntrada"
+      )
+      .addSelect(
+        "SUM(CASE WHEN operation = :saida THEN value_item ELSE 0 END)",
+        "totalSaida"
+      )
+      .setParameters({ entrada: "entrada", saida: "saída" })
+      .getRawOne();
+
+    if (!totalSaida) {
+      res.json({
+        status: 200,
+        details: {
+          entrada_total: +totalEntrada,
+          saida_total: 0,
+          total: +totalEntrada,
+        },
+      });
+    } else if (!totalEntrada) {
+      res.json({
+        status: 200,
+        details: {
+          entrada_total: 0,
+          saida_total: totalSaida,
+          total: -+totalSaida,
+        },
+      });
+    } else {
+      res.json({
+        status: 200,
+        details: {
+          entrada_total: +totalEntrada,
+          saida_total: +totalSaida,
+          total: +totalEntrada - +totalSaida,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching historic details:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error fetching historic details from the database",
+    });
+  }
 }
