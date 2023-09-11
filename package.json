@@ -20,8 +20,8 @@
     "pg": "^8.11.3",
     "pg-pool": "^3.6.1",
     "reflect-metadata": "^0.1.13",
-    "swagger-autogen": "^2.23.5",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-autogen": "^2.23.4",
+    "swagger-ui-express": "^4.1.4",
     "typeorm": "^0.3.17",
     "uuid": "^9.0.0"
   },
