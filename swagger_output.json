@@ -35,7 +35,19 @@
             "schema": {
               "type": "object",
               "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "operation": {
+                  "example": "any"
+                },
+                "category": {
+                  "example": "any"
+                },
                 "value_item": {
+                  "example": "any"
+                },
+                "date_input": {
                   "example": "any"
                 }
               }
@@ -90,7 +102,19 @@
             "schema": {
               "type": "object",
               "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "operation": {
+                  "example": "any"
+                },
+                "category": {
+                  "example": "any"
+                },
                 "value_item": {
+                  "example": "any"
+                },
+                "date_input": {
                   "example": "any"
                 }
               }
@@ -103,25 +127,6 @@
           },
           "404": {
             "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
           "500": {
             "description": "Internal Server Error"

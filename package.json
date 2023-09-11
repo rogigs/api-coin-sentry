@@ -1,27 +1,35 @@
 {
   "name": "api-coin-sentry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "api of website CoinSentry",
   "main": "nodemon index.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "ts-node-dev --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "doc": "node swagger.js"
+    "doc": "node swagger.js",
+    "typeorm": "typeorm-ts-node-esm"
   },
   "author": "Igor Gomes Soares",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^9.0.2",
     "and": "^0.0.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "pg": "^8.11.2",
+    "pg": "^8.11.3",
     "pg-pool": "^3.6.1",
+    "reflect-metadata": "^0.1.13",
     "swagger-autogen": "^2.23.5",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "typeorm": "^0.3.17",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.17",
     "dotenv": "^16.3.1",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
   }
 }
