@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
+const connection = new DataSource({
   type: "postgres",
   port: +process.env.TYPEORM_PORT,
   username: process.env.TYPEORM_USERNAME,
@@ -19,3 +19,14 @@ export const AppDataSource = new DataSource({
   migrations: [CreateHistoric1693086244784],
   ssl: true,
 });
+
+connection
+  .initialize()
+  .then(() => {
+    console.log(`Data Source has been initialized`);
+  })
+  .catch((err) => {
+    console.error(`Data Source initialization error`, err);
+  });
+
+export default connection;
