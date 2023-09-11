@@ -15,7 +15,12 @@ app.use(cors());
 const PORT = process.env.PORT || 4000;
 
 app.use("/api", historicRoute);
-app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(
+  "/doc",
+  express.static("node_modules/swagger-ui-dist/", { index: false }),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile)
+);
 
 app.listen(PORT, () => {
   console.log(`Server on ${PORT}...`);
