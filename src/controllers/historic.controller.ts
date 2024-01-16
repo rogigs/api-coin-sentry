@@ -1,10 +1,10 @@
-import connection from "../database/dataSource";
+import AppDataSource from "../database/dataSource";
 import { Historic } from "../entities/historic.entities";
 
 // TODO: pagination
 export async function getHistoric(_, res) {
   try {
-    const historic = await connection.manager.find(Historic);
+    const historic = await AppDataSource.manager.find(Historic);
 
     res.json({ status: 200, length: historic.length, historic });
   } catch (error) {
@@ -23,7 +23,7 @@ export async function getHistoric(_, res) {
 
 export async function deleteItem(req, res) {
   try {
-    const historicRepository = connection.getRepository(Historic);
+    const historicRepository = AppDataSource.getRepository(Historic);
     const itemToDelete = await historicRepository.findOne({
       where: { id: req.params.id },
     });
@@ -48,7 +48,7 @@ export async function deleteItem(req, res) {
 
 export async function updateItem(req, res) {
   try {
-    const historicRepository = connection.getRepository(Historic);
+    const historicRepository = AppDataSource.getRepository(Historic);
     const itemToUpdate = await historicRepository.findOne({
       where: { id: req.params.id },
     });
@@ -89,7 +89,7 @@ export async function addItem(req, res) {
     historic.category = req.body.category;
     historic.value_item = +req.body.value_item;
     historic.date_input = req.body.date_input;
-    await connection.manager.save(historic);
+    await AppDataSource.manager.save(historic);
 
     res.json({ status: 200, message: "Sucesso ao adicionar item" });
   } catch (error) {
@@ -103,7 +103,7 @@ export async function addItem(req, res) {
 
 export async function getHistoricDetails(_, res) {
   try {
-    const historic = connection.getRepository(Historic);
+    const historic = AppDataSource.getRepository(Historic);
 
     const { totalEntrada, totalSaida } = await historic
       .createQueryBuilder()

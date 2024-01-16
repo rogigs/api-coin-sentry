@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import historicRoute from "./routes/historic.routes";
+import userRoute from "./routes/user.routes";
+
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 
@@ -15,6 +17,8 @@ app.use(cors());
 const PORT = process.env.PORT || 4000;
 
 app.use("/api", historicRoute);
+app.use("/api", userRoute);
+
 app.use(
   "/doc",
   swaggerUi.serve,
