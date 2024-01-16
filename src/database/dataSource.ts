@@ -6,6 +6,7 @@ import { User } from "../entities/user.entities";
 
 dotenv.config();
 
+// TODO: make migration worko
 const AppDataSource = new DataSource({
   type: "postgres",
   port: +process.env.TYPEORM_PORT,

@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
-import historicRoute from "./routes/historic.routes";
+import historicRoute from "./routes/auth/historic.routes";
 import userRoute from "./routes/user.routes";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
+import { validateBearerToken } from "./helpers/validateBearerToken";
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
@@ -16,6 +17,8 @@ app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 
+// TODO: put this in a one archive
+app.use("*", validateBearerToken);
 app.use("/api", historicRoute);
 app.use("/api", userRoute);
 
