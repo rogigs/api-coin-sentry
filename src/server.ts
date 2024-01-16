@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import historicRoute from "./routes/historicRoute";
+import historicRoute from "./routes/historic.routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 

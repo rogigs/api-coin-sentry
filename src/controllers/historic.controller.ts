@@ -1,5 +1,5 @@
 import connection from "../database/dataSource";
-import { Historic } from "../entities/Historic";
+import { Historic } from "../entities/historic.entities";
 
 // TODO: pagination
 export async function getHistoric(_, res) {

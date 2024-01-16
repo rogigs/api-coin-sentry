@@ -1,7 +1,7 @@
 import "dotenv";
 import AppDataSource from "./dataSource";
 
-export async function dataSource() {
+export async function connection() {
   try {
     const conn = await AppDataSource.initialize();
 
