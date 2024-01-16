@@ -1,5 +1,5 @@
 import "dotenv";
-import { AppDataSource } from "./dataSource";
+import AppDataSource from "./dataSource";
 
 export async function dataSource() {
   try {

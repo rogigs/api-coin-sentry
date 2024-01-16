@@ -1,6 +1,7 @@
 import connection from "../database/dataSource";
 import { Historic } from "../entities/Historic";
 
+// TODO: pagination
 export async function getHistoric(_, res) {
   try {
     const historic = await connection.manager.find(Historic);

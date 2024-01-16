@@ -1,6 +1,4 @@
 import { DataSource } from "typeorm";
-import { CreateHistoric1693086244784 } from "./migrations/1693086244784-CreateHistoric";
-import { Historic } from "../entities/Historic";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,9 +12,9 @@ const connection = new DataSource({
   host: process.env.TYPEORM_HOST,
   synchronize: true,
   logging: true,
-  entities: [Historic],
+  migrations: [__dirname + "/../../database/migrations/*.{ts,js}"],
+  entities: [__dirname + "/../**/entities/*.{ts,js}"],
   subscribers: [],
-  migrations: [CreateHistoric1693086244784],
   ssl: true,
 });
 

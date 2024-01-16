@@ -1,15 +1,13 @@
-import connection from "./database/dataSource";
+import express from "express";
+import cors from "cors";
+import historicRoute from "./routes/historicRoute";
+import swaggerUi from "swagger-ui-express";
+import swaggerFile from "../swagger_output.json";
 
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const historicRoute = require("./routes/historicRoute");
-const swaggerUi = require("swagger-ui-express");
-const swaggerFile = require("../swagger_output.json");
 const CSS_URL =
-  " https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
 
-connection;
+const app = express();
 
 app.use(express.json());
 app.use(cors());

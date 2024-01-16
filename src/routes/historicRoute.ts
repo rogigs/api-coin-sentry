@@ -1,12 +1,18 @@
 import { Router } from "express";
+import {
+  addItem,
+  deleteItem,
+  updateItem,
+  getHistoric,
+  getHistoricDetails,
+} from "../controllers/historicController";
 
 const routes = Router();
-const historicController = require("../controllers/historicController");
 
-routes.get("/historic", historicController.getHistoric);
-routes.delete("/historic/:id", historicController.deleteItem);
-routes.put("/historic/:id", historicController.updateItem);
-routes.post("/historic", historicController.addItem);
-routes.get("/historic/details", historicController.getHistoricDetails);
+routes.get("/historic", getHistoric);
+routes.delete("/historic/:id", deleteItem);
+routes.put("/historic/:id", updateItem);
+routes.post("/historic", addItem);
+routes.get("/historic/details", getHistoricDetails);
 
-module.exports = routes;
+export default routes;
