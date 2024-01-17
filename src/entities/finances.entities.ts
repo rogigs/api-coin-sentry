@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Check } from "typeorm";
 
-@Entity()
-export class Historic {
+@Entity("finances")
+@Check(`"operation" IN ('entrada', 'saida')`)
+export class Finances {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -17,6 +18,7 @@ export class Historic {
   @Column()
   value_item: number;
 
+  // TODO: add date
   @Column()
   date_input: string;
 }

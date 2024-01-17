@@ -12,6 +12,10 @@ export const validateBearerToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY);
+    console.log(
+      "🚀 ~ validateBearerToken ~ process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY:",
+      process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY
+    );
 
     req.user = decoded;
 

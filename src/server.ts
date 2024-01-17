@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import historicRoute from "./routes/auth/historic.routes";
+import financesRoutes from "./routes/auth/finances.routes";
 import userRoute from "./routes/user.routes";
 
 import swaggerUi from "swagger-ui-express";
@@ -17,10 +17,11 @@ app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 
-// TODO: put this in a one archive
-app.use("*", validateBearerToken);
-app.use("/api", historicRoute);
 app.use("/api", userRoute);
+// TODO: put this in a one archive
+
+app.use("*", validateBearerToken);
+app.use("/api", financesRoutes);
 
 app.use(
   "/doc",

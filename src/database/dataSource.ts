@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { Historic } from "../entities/historic.entities";
+import { Finances } from "../entities/finances.entities";
 import { CreateHistoric1693086244784 } from "./migrations/1693086244784-CreateHistoric";
 import { User } from "../entities/user.entities";
 
@@ -17,7 +17,7 @@ const AppDataSource = new DataSource({
   synchronize: true,
   logging: true,
   migrations: [CreateHistoric1693086244784],
-  entities: [Historic, User],
+  entities: [Finances, User],
   subscribers: [],
   ssl: true,
 });
