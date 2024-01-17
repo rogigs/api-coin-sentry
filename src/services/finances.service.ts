@@ -1,7 +1,7 @@
 import AppDataSource from "../database/dataSource";
 import { Finances } from "../entities/finances.entities";
 
-const historicRepository = AppDataSource.getRepository(Finances);
+const financeRepository = AppDataSource.getRepository(Finances);
 
 export const createFinance = async ({ newFinance }) => {
   const finance = new Finances();
@@ -17,20 +17,25 @@ export const createFinance = async ({ newFinance }) => {
   return await AppDataSource.manager.save(finance);
 };
 
-export const findFinances = async () => {
-  return await AppDataSource.manager.find(Finances);
+export const findFinances = async ({ page, pageSize }) => {
+  const skip = (page - 1) * pageSize;
+
+  return await financeRepository.find({
+    take: pageSize,
+    skip: skip,
+  });
 };
 
 export const deleteFinanceById = async ({ id }) => {
-  const financeToDelete = await historicRepository.findOne({
+  const financeToDelete = await financeRepository.findOne({
     where: { id },
   });
 
-  return await historicRepository.remove(financeToDelete);
+  return await financeRepository.remove(financeToDelete);
 };
 
 export const updateFinanceById = async ({ id, newFinance }) => {
-  const financeToUpdate = await historicRepository.findOne({
+  const financeToUpdate = await financeRepository.findOne({
     where: { id },
   });
 
@@ -42,11 +47,11 @@ export const updateFinanceById = async ({ id, newFinance }) => {
   financeToUpdate.value_item = +value_item;
   financeToUpdate.date_input = date_input;
 
-  return await historicRepository.save(financeToUpdate);
+  return await financeRepository.save(financeToUpdate);
 };
 
 export const sumFinances = async () => {
-  return await historicRepository
+  return await financeRepository
     .createQueryBuilder()
     .select(
       "SUM(CASE WHEN operation = :entrada THEN value_item ELSE 0 END)",

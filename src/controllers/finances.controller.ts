@@ -16,10 +16,12 @@ export const postFinance = async (req, res) => {
   }
 };
 
-// TODO: pagination
-export const getFinances = async (_, res) => {
+export const getFinances = async (req, res) => {
   try {
-    const finances = await FinancesService.findFinances();
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+
+    const finances = await FinancesService.findFinances({ page, pageSize });
 
     res.json({ status: 200, length: finances.length, data: finances });
   } catch (error) {

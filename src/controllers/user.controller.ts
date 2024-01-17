@@ -4,7 +4,6 @@ import { User } from "../entities/user.entities";
 
 // TODO: pagination
 export async function getUser(req, res) {
-  console.log("🚀 ~ getUser ~ req:", req.params);
   try {
     const userRepository = connection.getRepository(User);
 
@@ -34,7 +33,6 @@ export async function createUser(req, res) {
     const user = new User();
 
     const { email, password } = req.body;
-    console.log("🚀 ~ createUser ~ req.body:", req.body);
 
     user.email = email;
     user.password = password;
