@@ -18,12 +18,17 @@ export const createFinance = async ({ newFinance }) => {
 };
 
 export const findFinances = async ({ page, pageSize }) => {
-  const skip = (page - 1) * pageSize;
+  const skip = page * pageSize;
 
   return await financeRepository.find({
+    cache: true,
     take: pageSize,
     skip: skip,
   });
+};
+
+export const countFinances = async () => {
+  return await financeRepository.count();
 };
 
 export const deleteFinanceById = async ({ id }) => {

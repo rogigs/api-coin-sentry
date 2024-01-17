@@ -18,12 +18,13 @@ export const postFinance = async (req, res) => {
 
 export const getFinances = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page) || 0;
     const pageSize = parseInt(req.query.pageSize) || 10;
 
     const finances = await FinancesService.findFinances({ page, pageSize });
+    const lengthFinances = await FinancesService.countFinances();
 
-    res.json({ status: 200, length: finances.length, data: finances });
+    res.json({ status: 200, length: lengthFinances, data: finances });
   } catch (error) {
     console.error(error);
 
@@ -97,7 +98,7 @@ export const getSumFinances = async (_, res) => {
     if (!totalSaida) {
       res.json({
         status: 200,
-        details: {
+        data: {
           entrada_total: +totalEntrada,
           saida_total: 0,
           total: +totalEntrada,
@@ -106,7 +107,7 @@ export const getSumFinances = async (_, res) => {
     } else if (!totalEntrada) {
       res.json({
         status: 200,
-        details: {
+        data: {
           entrada_total: 0,
           saida_total: totalSaida,
           total: -+totalSaida,
@@ -115,7 +116,7 @@ export const getSumFinances = async (_, res) => {
     } else {
       res.json({
         status: 200,
-        details: {
+        data: {
           entrada_total: +totalEntrada,
           saida_total: +totalSaida,
           total: +totalEntrada - +totalSaida,
