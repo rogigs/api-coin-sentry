@@ -6,7 +6,7 @@ import { User } from "../entities/user.entities";
 
 dotenv.config();
 
-// TODO: make migration worko
+// TODO: make migration work
 const AppDataSource = new DataSource({
   type: "postgres",
   port: +process.env.TYPEORM_PORT,
@@ -16,8 +16,8 @@ const AppDataSource = new DataSource({
   host: process.env.TYPEORM_HOST,
   synchronize: true,
   logging: true,
-  migrations: [CreateHistoric1693086244784],
-  entities: [Finances, User],
+  migrations: [],
+  entities: [User, Finances],
   subscribers: [],
   ssl: true,
 });

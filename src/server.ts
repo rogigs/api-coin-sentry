@@ -6,11 +6,20 @@ import userRoute from "./routes/user.routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 import { validateBearerToken } from "./helpers/validateBearerToken";
+import session from "express-session";
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
 
 const app = express();
+
+app.use(
+  session({
+    secret: "segredo",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use(express.json());
 app.use(cors());

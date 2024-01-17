@@ -21,7 +21,11 @@ export const getFinances = async (req, res) => {
     const page = parseInt(req.query.page) || 0;
     const pageSize = parseInt(req.query.pageSize) || 10;
 
-    const finances = await FinancesService.findFinances({ page, pageSize });
+    const finances = await FinancesService.findFinances({
+      page,
+      pageSize,
+      userId: req.session.userId,
+    });
     const lengthFinances = await FinancesService.countFinances();
 
     res.json({ status: 200, length: lengthFinances, data: finances });

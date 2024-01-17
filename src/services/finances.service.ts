@@ -17,13 +17,16 @@ export const createFinance = async ({ newFinance }) => {
   return await AppDataSource.manager.save(finance);
 };
 
-export const findFinances = async ({ page, pageSize }) => {
+export const findFinances = async ({ page, pageSize, userId }) => {
   const skip = page * pageSize;
 
   return await financeRepository.find({
     cache: true,
     take: pageSize,
     skip: skip,
+    where: {
+      user: { id: userId },
+    },
   });
 };
 

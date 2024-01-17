@@ -10,6 +10,10 @@ export async function getUser(req, res) {
     if (user) {
       res.json({ status: 200, message: "Success to login" });
 
+      req.session.userId = user.id;
+
+      req.session.save();
+
       return;
     }
 
@@ -17,7 +21,7 @@ export async function getUser(req, res) {
   } catch (error) {
     res.status(500).json({
       status: 500,
-      error: "Error fetching all historic from the database",
+      error: "Error fetching a user from the database",
     });
   }
 }
