@@ -4,6 +4,7 @@ export const postFinance = async (req, res) => {
   try {
     const finance = await FinancesService.createFinance({
       newFinance: req.body,
+      userId: req.session.userId,
     });
 
     res.json({ status: 200, data: finance });
@@ -20,13 +21,14 @@ export const getFinances = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 0;
     const pageSize = parseInt(req.query.pageSize) || 10;
+    const userId = req.session.userId;
 
     const finances = await FinancesService.findFinances({
       page,
       pageSize,
-      userId: req.session.userId,
+      userId,
     });
-    const lengthFinances = await FinancesService.countFinances();
+    const lengthFinances = await FinancesService.countFinances({ userId });
 
     res.json({ status: 200, length: lengthFinances, data: finances });
   } catch (error) {
@@ -47,6 +49,7 @@ export const deleteFinance = async (req, res) => {
   try {
     const financeToDelete = await FinancesService.deleteFinanceById({
       id: req.params.id,
+      userId: req.session.userId,
     });
 
     if (financeToDelete) {
@@ -71,8 +74,8 @@ export const putFinanceById = async (req, res) => {
     const financeToUpdate = await FinancesService.updateFinanceById({
       id: req.params.id,
       newFinance: req.body,
+      userId: req.session.userId,
     });
-    console.log("🚀 ~ putFinanceById ~ financeToUpdate:", financeToUpdate);
 
     res.json({
       status: 200,
@@ -95,9 +98,11 @@ export const putFinanceById = async (req, res) => {
   }
 };
 
-export const getSumFinances = async (_, res) => {
+export const getSumFinances = async (req, res) => {
   try {
-    const { totalEntrada, totalSaida } = await FinancesService.sumFinances();
+    const { totalEntrada, totalSaida } = await FinancesService.sumFinances({
+      userId: req.session.userId,
+    });
 
     if (!totalSaida) {
       res.json({

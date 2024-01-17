@@ -1,8 +1,8 @@
-import { createUser, findUser } from "../services/user.service";
+import * as UsersService from "../services/user.service";
 
 export async function getUser(req, res) {
   try {
-    const user = await findUser({
+    const user = await UsersService.findUserByEmailAndPassword({
       email: req.query.email,
       password: req.query.password,
     });
@@ -30,7 +30,7 @@ export async function postUser(req, res) {
   // TODO: validation email and anonymous email and password
 
   try {
-    await createUser({
+    await UsersService.createUser({
       newUser: req.body,
     });
 

@@ -1,10 +1,17 @@
 import AppDataSource from "../database/dataSource";
 import { Finances } from "../entities/finances.entities";
+import * as UsersService from "./user.service";
 
 const financeRepository = AppDataSource.getRepository(Finances);
 
-export const createFinance = async ({ newFinance }) => {
+export const createFinance = async ({ newFinance, userId }) => {
   const finance = new Finances();
+
+  const user = await UsersService.findUserById({ id: userId });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
 
   const { title, operation, category, value_item, date_input } = newFinance;
 
@@ -13,6 +20,8 @@ export const createFinance = async ({ newFinance }) => {
   finance.category = category;
   finance.value_item = +value_item;
   finance.date_input = date_input;
+
+  finance.user = user;
 
   return await AppDataSource.manager.save(finance);
 };
@@ -30,21 +39,25 @@ export const findFinances = async ({ page, pageSize, userId }) => {
   });
 };
 
-export const countFinances = async () => {
-  return await financeRepository.count();
+export const countFinances = async ({ userId }) => {
+  return await financeRepository.count({
+    where: {
+      user: { id: userId },
+    },
+  });
 };
 
-export const deleteFinanceById = async ({ id }) => {
+export const deleteFinanceById = async ({ id, userId }) => {
   const financeToDelete = await financeRepository.findOne({
-    where: { id },
+    where: { id, user: { id: userId } },
   });
 
   return await financeRepository.remove(financeToDelete);
 };
 
-export const updateFinanceById = async ({ id, newFinance }) => {
+export const updateFinanceById = async ({ id, newFinance, userId }) => {
   const financeToUpdate = await financeRepository.findOne({
-    where: { id },
+    where: { id, user: { id: userId } },
   });
 
   const { title, operation, category, value_item, date_input } = newFinance;
@@ -58,7 +71,7 @@ export const updateFinanceById = async ({ id, newFinance }) => {
   return await financeRepository.save(financeToUpdate);
 };
 
-export const sumFinances = async () => {
+export const sumFinances = async ({ userId }) => {
   return await financeRepository
     .createQueryBuilder()
     .select(
@@ -69,6 +82,7 @@ export const sumFinances = async () => {
       "SUM(CASE WHEN operation = :saida THEN value_item ELSE 0 END)",
       "totalSaida"
     )
-    .setParameters({ entrada: "entrada", saida: "saida" })
+    .where("user_id = :userId")
+    .setParameters({ entrada: "entrada", saida: "saida", userId })
     .getRawOne();
 };

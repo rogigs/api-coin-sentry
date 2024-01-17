@@ -3,7 +3,13 @@ import { User } from "../entities/user.entities";
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const findUser = async ({ email, password }) => {
+export const findUserById = async ({ id }) => {
+  return await userRepository.findOne({
+    where: { id },
+  });
+};
+
+export const findUserByEmailAndPassword = async ({ email, password }) => {
   return await userRepository.findOne({
     where: { email: email, password: password },
   });
