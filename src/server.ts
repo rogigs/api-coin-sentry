@@ -7,11 +7,13 @@ import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 import { validateBearerToken } from "./helpers/validateBearerToken";
 import session from "express-session";
+import cookieParser from "cookie-parser";
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
 
 const app = express();
+app.use(cookieParser());
 
 app.use(
   session({
