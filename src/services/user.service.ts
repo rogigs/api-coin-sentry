@@ -1,13 +1,8 @@
 import AppDataSource from "../database/dataSource";
+import { UserEntity } from "../entities/types/user.type.entity";
 import { User } from "../entities/user.entities";
 
 const userRepository = AppDataSource.getRepository(User);
-
-export type UserEntity = {
-  id: string;
-  email: string;
-  password: string;
-};
 
 export const findUserById = async ({ id }: Pick<UserEntity, "id">) => {
   return await userRepository.findOne({

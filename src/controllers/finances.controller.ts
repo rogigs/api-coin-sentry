@@ -1,10 +1,19 @@
+import { Request, Response } from "express";
 import * as FinancesService from "../services/finances.service";
 
-export const postFinance = async (req, res) => {
+export const postFinance = async (req: Request, res: Response) => {
   try {
+    const { title, operation, category, value_item, date_input } = req.body;
+
     const finance = await FinancesService.createFinance({
-      newFinance: req.body,
-      userId: req.session.userId,
+      title,
+      operation,
+      category,
+      value_item,
+      date_input,
+      user: {
+        id: req.session.userId,
+      },
     });
 
     res.json({ status: 200, data: finance });
@@ -17,18 +26,22 @@ export const postFinance = async (req, res) => {
   }
 };
 
-export const getFinances = async (req, res) => {
+export const getFinances = async (req: Request, res: Response) => {
   try {
-    const page = parseInt(req.query.page) || 0;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const page = parseInt(req.query.page as string) || 0;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
     const userId = req.session.userId;
 
     const finances = await FinancesService.findFinances({
       page,
       pageSize,
-      userId,
+      user: {
+        id: userId,
+      },
     });
-    const lengthFinances = await FinancesService.countFinances({ userId });
+    const lengthFinances = await FinancesService.countFinances({
+      user: { id: userId },
+    });
 
     res.json({ status: 200, length: lengthFinances, data: finances });
   } catch (error) {
@@ -45,11 +58,13 @@ export const getFinances = async (req, res) => {
   }
 };
 
-export const deleteFinance = async (req, res) => {
+export const deleteFinance = async (req: Request, res: Response) => {
   try {
     const financeToDelete = await FinancesService.deleteFinanceById({
       id: req.params.id,
-      userId: req.session.userId,
+      user: {
+        id: req.session.userId,
+      },
     });
 
     if (financeToDelete) {
@@ -69,7 +84,7 @@ export const deleteFinance = async (req, res) => {
   }
 };
 
-export const putFinanceById = async (req, res) => {
+export const putFinanceById = async (req: Request, res: Response) => {
   try {
     const financeToUpdate = await FinancesService.updateFinanceById({
       id: req.params.id,
@@ -98,40 +113,25 @@ export const putFinanceById = async (req, res) => {
   }
 };
 
-export const getSumFinances = async (req, res) => {
+export const getSumFinances = async (req: Request, res: Response) => {
   try {
-    const { totalEntrada, totalSaida } = await FinancesService.sumFinances({
-      userId: req.session.userId,
+    const { sumInput, sumOutput } = await FinancesService.sumFinances({
+      user: {
+        id: req.session.userId,
+      },
     });
 
-    if (!totalSaida) {
-      res.json({
-        status: 200,
-        data: {
-          entrada_total: +totalEntrada,
-          saida_total: 0,
-          total: +totalEntrada,
-        },
-      });
-    } else if (!totalEntrada) {
-      res.json({
-        status: 200,
-        data: {
-          entrada_total: 0,
-          saida_total: totalSaida,
-          total: -+totalSaida,
-        },
-      });
-    } else {
-      res.json({
-        status: 200,
-        data: {
-          entrada_total: +totalEntrada,
-          saida_total: +totalSaida,
-          total: +totalEntrada - +totalSaida,
-        },
-      });
-    }
+    const numberSumInput = +sumInput;
+    const numberSumOutput = +sumOutput;
+
+    res.json({
+      status: 200,
+      data: {
+        entrada_total: numberSumOutput,
+        saida_total: numberSumOutput,
+        total: numberSumOutput - numberSumInput,
+      },
+    });
   } catch (error) {
     console.error("Error fetching finances details:", error);
 
