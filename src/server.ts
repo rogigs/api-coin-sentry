@@ -1,20 +1,20 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import financesRoutes from "./routes/auth/finances.routes";
 import userRoute from "./routes/user.routes";
 
+import cookieParser from "cookie-parser";
+import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 import { validateBearerToken } from "./helpers/validateBearerToken";
-import session from "express-session";
-import cookieParser from "cookie-parser";
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
 
 const app = express();
-app.use(cookieParser());
 
+app.use(cookieParser());
 app.use(
   session({
     secret: "segredo",
@@ -22,6 +22,11 @@ app.use(
     saveUninitialized: true,
   })
 );
+declare module "express-session" {
+  export interface SessionData {
+    userId: string | null;
+  }
+}
 
 // TODO: set corrects CORS
 app.use(express.json());

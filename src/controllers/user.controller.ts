@@ -1,7 +1,8 @@
-import * as UsersService from "../services/user.service";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import * as UsersService from "../services/user.service";
 
-export const handleToken = (req, res) => {
+export const handleToken = (req: Request, res: Response) => {
   const { token } = req.body;
 
   if (!token) {
@@ -27,15 +28,18 @@ export const handleToken = (req, res) => {
   });
 };
 
-export const logoutUser = async (req, res) => {
+export const logoutUser = async (req: Request, res: Response) => {
   req.session.userId = null;
+
+  req.session.save();
 
   req.cookies.accessToken = null;
   req.cookies.refreshToken = null;
 
-  res.json({ status: 204, message: "Logout successful" });
+  res.json({ status: 200, message: "Logout successful" });
 };
 
+// TODO: resolve types of cookies
 export const authUser = async (req, res) => {
   try {
     const user = await UsersService.findUserByEmailAndPassword({
@@ -87,11 +91,12 @@ export const authUser = async (req, res) => {
   }
 };
 
-export const postUser = async (req, res) => {
+export const postUser = async (req: Request, res: Response) => {
   // TODO: validation email and anonymous email and password
   try {
     await UsersService.createUser({
-      newUser: req.body,
+      email: req.body.email,
+      password: req.body.password,
     });
 
     res.json({ status: 200, message: "Sucesso ao criar usuário" });
@@ -104,7 +109,7 @@ export const postUser = async (req, res) => {
   }
 };
 
-export const getUser = async (req, res) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
     const user = await UsersService.findUserByEmailAndPassword({
       email: req.body.email,

@@ -3,22 +3,32 @@ import { User } from "../entities/user.entities";
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const findUserById = async ({ id }) => {
+export type UserEntity = {
+  id: string;
+  email: string;
+  password: string;
+};
+
+export const findUserById = async ({ id }: Pick<UserEntity, "id">) => {
   return await userRepository.findOne({
     where: { id },
   });
 };
 
-export const findUserByEmailAndPassword = async ({ email, password }) => {
+export const findUserByEmailAndPassword = async ({
+  email,
+  password,
+}: Omit<UserEntity, "id">) => {
   return await userRepository.findOne({
     where: { email: email, password: password },
   });
 };
 
-export const createUser = async ({ newUser }) => {
+export const createUser = async ({
+  email,
+  password,
+}: Omit<UserEntity, "id">) => {
   const user = new User();
-
-  const { email, password } = newUser;
 
   user.email = email;
   user.password = password;
