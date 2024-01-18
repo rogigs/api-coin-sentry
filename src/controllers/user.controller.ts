@@ -70,9 +70,9 @@ export const authUser = async (req, res) => {
         sameSite: "Strict", // Ajuda a mitigar ataques CSRF
       });
 
-      res
-        .header("Authorization", `Bearer ${accessToken}`)
-        .json({ status: 200, message: "Success to login" });
+      res.set("Authorization", `Bearer ${accessToken}`);
+
+      res.json({ status: 200, message: "Success to login" });
 
       return;
     }

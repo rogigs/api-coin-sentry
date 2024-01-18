@@ -23,8 +23,13 @@ app.use(
   })
 );
 
+// TODO: set corrects CORS
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: ["Authorization"],
+  })
+);
 
 const PORT = process.env.PORT || 4000;
 
