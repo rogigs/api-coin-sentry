@@ -28,8 +28,8 @@ app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 
-app.use("/api", userRoute);
 // TODO: put this in a one archive
+app.use("/api", userRoute);
 
 app.use("*", validateBearerToken);
 app.use("/api", financesRoutes);
