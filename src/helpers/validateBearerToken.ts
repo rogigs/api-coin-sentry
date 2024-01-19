@@ -1,19 +1,19 @@
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
 export const validateBearerToken = (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.headers.authorization;
 
   if (!token) {
     return res.status(401).json({ error: "Token not provided" });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY);
-    console.log(
-      "🚀 ~ validateBearerToken ~ process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY:",
+    const justToken = token.split(" ")[1];
+    const decoded = jwt.verify(
+      justToken,
       process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY
     );
 
