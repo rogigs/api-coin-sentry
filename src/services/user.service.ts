@@ -1,10 +1,11 @@
 import AppDataSource from "../database/dataSource";
-import { UserEntity } from "../entities/types/user.type.entity";
 import { User } from "../entities/user.entities";
+import { UserModel } from "../models/user.model";
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const findUserById = async ({ id }: Pick<UserEntity, "id">) => {
+//
+export const findUserById = async ({ id }: Pick<UserModel, "id">) => {
   return await userRepository.findOne({
     where: { id },
   });
@@ -13,7 +14,7 @@ export const findUserById = async ({ id }: Pick<UserEntity, "id">) => {
 export const findUserByEmailAndPassword = async ({
   email,
   password,
-}: Omit<UserEntity, "id">) => {
+}: Omit<UserModel, "id">) => {
   return await userRepository.findOne({
     where: { email: email, password: password },
   });
@@ -22,7 +23,7 @@ export const findUserByEmailAndPassword = async ({
 export const createUser = async ({
   email,
   password,
-}: Omit<UserEntity, "id">) => {
+}: Omit<UserModel, "id">) => {
   const user = new User();
 
   user.email = email;

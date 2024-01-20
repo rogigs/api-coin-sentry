@@ -1,6 +1,6 @@
 import AppDataSource from "../database/dataSource";
 import { Finances } from "../entities/finances.entities";
-import { FinanceEntity } from "../entities/types/finances.type.entity";
+import { FinanceModel } from "../models/finances.model";
 import { Pagination } from "../types";
 import * as UsersService from "./user.service";
 
@@ -13,7 +13,7 @@ export const createFinance = async ({
   value_item,
   date_input,
   user: { id },
-}: Omit<FinanceEntity, "id">) => {
+}: Omit<FinanceModel, "id">) => {
   const finance = new Finances();
 
   const user = await UsersService.findUserById({ id });
@@ -37,7 +37,7 @@ export const findFinances = async ({
   page,
   pageSize,
   user: { id },
-}: Pagination & Pick<FinanceEntity, "user">) => {
+}: Pagination & Pick<FinanceModel, "user">) => {
   const skip = page * pageSize;
 
   return await financeRepository.find({
@@ -52,7 +52,7 @@ export const findFinances = async ({
 
 export const countFinances = async ({
   user: { id },
-}: Pick<FinanceEntity, "user">) => {
+}: Pick<FinanceModel, "user">) => {
   return await financeRepository.count({
     where: {
       user: { id },
@@ -63,7 +63,7 @@ export const countFinances = async ({
 export const deleteFinanceById = async ({
   id,
   user: { id: userId },
-}: Pick<FinanceEntity, "id" | "user">) => {
+}: Pick<FinanceModel, "id" | "user">) => {
   const financeToDelete = await financeRepository.findOne({
     where: { id, user: { id: userId } },
   });
@@ -99,7 +99,7 @@ export const updateFinanceById = async ({
 
 export const sumFinances = async ({
   user: { id },
-}: Pick<FinanceEntity, "user">) => {
+}: Pick<FinanceModel, "user">) => {
   return await financeRepository
     .createQueryBuilder()
     .select(

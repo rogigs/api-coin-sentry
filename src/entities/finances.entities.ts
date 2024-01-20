@@ -1,10 +1,10 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
   Check,
-  ManyToOne,
+  Column,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./user.entities";
 
