@@ -71,12 +71,22 @@ export const deleteFinanceById = async ({
   return await financeRepository.remove(financeToDelete);
 };
 
-export const updateFinanceById = async ({ id, newFinance, userId }) => {
+export const updateFinanceById = async ({
+  id,
+  title,
+  operation,
+  category,
+  value_item,
+  date_input,
+  user: { id: userId },
+}) => {
   const financeToUpdate = await financeRepository.findOne({
     where: { id, user: { id: userId } },
   });
 
-  const { title, operation, category, value_item, date_input } = newFinance;
+  if (!financeToUpdate) {
+    throw new Error('No metadata for "Finances" was found.');
+  }
 
   financeToUpdate.title = title;
   financeToUpdate.operation = operation;

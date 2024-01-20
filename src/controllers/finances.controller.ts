@@ -1,6 +1,43 @@
 import { Request, Response } from "express";
 import * as FinancesService from "../services/finances.service";
 
+export const getSumFinances = async (req: Request, res: Response) => {
+  console.log("🚀 ~ getSumFinances ~ req.session.userId:", req.session);
+
+  try {
+    const { sumInput, sumOutput } = await FinancesService.sumFinances({
+      user: {
+        id: req.session.userId,
+      },
+    });
+
+    const numberSumInput = Number(sumInput);
+    const numberSumOutput = Number(sumOutput);
+
+    console.log("🚀 ~ getSumFinances ~ numberSumOutput:", {
+      entrada_total: numberSumInput,
+      saida_total: numberSumOutput,
+      total: numberSumOutput - numberSumInput,
+    });
+
+    res.json({
+      status: 200,
+      data: {
+        entrada_total: numberSumInput,
+        saida_total: numberSumOutput,
+        total: numberSumOutput - numberSumInput,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching finances details:", error);
+
+    res.status(500).json({
+      status: 500,
+      error: "Error fetching finances details from the database",
+    });
+  }
+};
+
 export const postFinance = async (req: Request, res: Response) => {
   try {
     const { title, operation, category, value_item, date_input } = req.body;
@@ -28,6 +65,8 @@ export const postFinance = async (req: Request, res: Response) => {
 
 export const getFinances = async (req: Request, res: Response) => {
   try {
+    console.log("🚀 ~ getFinances ~  req.session:", req.session);
+
     const page = parseInt(req.query.page as string) || 0;
     const pageSize = parseInt(req.query.pageSize as string) || 10;
     const userId = req.session.userId;
@@ -88,8 +127,10 @@ export const putFinanceById = async (req: Request, res: Response) => {
   try {
     const financeToUpdate = await FinancesService.updateFinanceById({
       id: req.params.id,
-      newFinance: req.body,
-      userId: req.session.userId,
+      user: {
+        id: req.session.userId,
+      },
+      ...req.body,
     });
 
     res.json({
@@ -103,41 +144,14 @@ export const putFinanceById = async (req: Request, res: Response) => {
         status: 404,
         error: "Error fetching item don't found from the database",
       });
+
+      return;
     }
 
     console.error("Error updating a finances from the database:", error);
     res.status(500).json({
       status: 500,
       error: "Error updating a finances from the database",
-    });
-  }
-};
-
-export const getSumFinances = async (req: Request, res: Response) => {
-  try {
-    const { sumInput, sumOutput } = await FinancesService.sumFinances({
-      user: {
-        id: req.session.userId,
-      },
-    });
-
-    const numberSumInput = +sumInput;
-    const numberSumOutput = +sumOutput;
-
-    res.json({
-      status: 200,
-      data: {
-        entrada_total: numberSumOutput,
-        saida_total: numberSumOutput,
-        total: numberSumOutput - numberSumInput,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching finances details:", error);
-
-    res.status(500).json({
-      status: 500,
-      error: "Error fetching finances details from the database",
     });
   }
 };
