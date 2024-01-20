@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as FinancesService from "../services/finances.service";
 
 export const getSumFinances = async (req: Request, res: Response) => {
-  console.log("🚀 ~ getSumFinances ~ req.session.userId:", req.session);
+  // TODO:
 
   try {
     const { sumInput, sumOutput } = await FinancesService.sumFinances({
@@ -14,17 +14,11 @@ export const getSumFinances = async (req: Request, res: Response) => {
     const numberSumInput = Number(sumInput);
     const numberSumOutput = Number(sumOutput);
 
-    console.log("🚀 ~ getSumFinances ~ numberSumOutput:", {
-      entrada_total: numberSumInput,
-      saida_total: numberSumOutput,
-      total: numberSumOutput - numberSumInput,
-    });
-
     res.json({
       status: 200,
       data: {
-        entrada_total: numberSumInput,
-        saida_total: numberSumOutput,
+        input: numberSumInput,
+        output: numberSumOutput,
         total: numberSumOutput - numberSumInput,
       },
     });
@@ -34,31 +28,6 @@ export const getSumFinances = async (req: Request, res: Response) => {
     res.status(500).json({
       status: 500,
       error: "Error fetching finances details from the database",
-    });
-  }
-};
-
-export const postFinance = async (req: Request, res: Response) => {
-  try {
-    const { title, operation, category, value_item, date_input } = req.body;
-
-    const finance = await FinancesService.createFinance({
-      title,
-      operation,
-      category,
-      value_item,
-      date_input,
-      user: {
-        id: req.session.userId,
-      },
-    });
-
-    res.json({ status: 200, data: finance });
-  } catch (error) {
-    console.error("Error inserting a finance from the database:", error);
-    res.status(500).json({
-      status: 500,
-      error: "Error inserting a finance from the database",
     });
   }
 };
@@ -93,6 +62,31 @@ export const getFinances = async (req: Request, res: Response) => {
     res.status(500).json({
       status: 500,
       error: "Error fetching all finances from the database",
+    });
+  }
+};
+
+export const postFinance = async (req: Request, res: Response) => {
+  try {
+    const { title, operation, category, value_item, date_input } = req.body;
+
+    const finance = await FinancesService.createFinance({
+      title,
+      operation,
+      category,
+      value_item,
+      date_input,
+      user: {
+        id: req.session.userId,
+      },
+    });
+
+    res.json({ status: 200, data: finance });
+  } catch (error) {
+    console.error("Error inserting a finance from the database:", error);
+    res.status(500).json({
+      status: 500,
+      error: "Error inserting a finance from the database",
     });
   }
 };
