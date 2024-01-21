@@ -12,7 +12,7 @@
       "dest": "src/server.ts"
     },
     {
-      "src": "/doc",
+      "src": "/doc/(.*)",
       "dest": "src/server.ts"
     }
   ]
