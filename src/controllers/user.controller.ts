@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import * as UsersService from "../services/user.service";
@@ -64,14 +65,14 @@ export const authUser = async (req, res) => {
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: "production", // Configure para true se estiver usando HTTPS em produção
-        sameSite: "Strict", // Ajuda a mitigar ataques CSRF
-        expires: new Date(Date.now() + 31536000000), // 1y
+        secure: "production",
+        sameSite: "Strict",
+        expires: new Date(Date.now() + 31536000000),
       });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: "production", // Configure para true se estiver usando HTTPS em produção
-        sameSite: "Strict", // Ajuda a mitigar ataques CSRF
+        secure: "production",
+        sameSite: "Strict",
       });
 
       res.set("Authorization", `Bearer ${accessToken}`);
@@ -83,11 +84,13 @@ export const authUser = async (req, res) => {
 
     res.json({ status: 204, message: "Email or password incorrect" });
   } catch (error) {
-    console.log("🚀 ~ authUser ~ error:", error);
     res.status(500).json({
       status: 500,
       error: "Error fetching a user from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
@@ -101,11 +104,13 @@ export const postUser = async (req: Request, res: Response) => {
 
     res.json({ status: 200, message: "Sucesso ao criar usuário" });
   } catch (error) {
-    console.error("Error inserting a user from the database:", error);
     res.status(500).json({
       status: 500,
       error: "Error inserting a user from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
@@ -126,5 +131,8 @@ export const getUser = async (req: Request, res: Response) => {
       status: 500,
       error: "Error fetching a user from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };

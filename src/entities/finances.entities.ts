@@ -29,7 +29,7 @@ export class Finances {
   @Column({ nullable: false, default: "10/10/200" })
   date_input: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: "user_id" })
   user: User;
 }

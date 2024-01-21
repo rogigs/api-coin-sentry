@@ -1,9 +1,8 @@
+import * as Sentry from "@sentry/node";
 import { Request, Response } from "express";
 import * as FinancesService from "../services/finances.service";
 
 export const getSumFinances = async (req: Request, res: Response) => {
-  // TODO:
-
   try {
     const { sumInput, sumOutput } = await FinancesService.sumFinances({
       user: {
@@ -23,19 +22,18 @@ export const getSumFinances = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching finances details:", error);
-
     res.status(500).json({
       status: 500,
       error: "Error fetching finances details from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
 export const getFinances = async (req: Request, res: Response) => {
   try {
-    console.log("🚀 ~ getFinances ~  req.session:", req.session);
-
     const page = parseInt(req.query.page as string) || 0;
     const pageSize = parseInt(req.query.pageSize as string) || 10;
     const userId = req.session.userId;
@@ -51,18 +49,25 @@ export const getFinances = async (req: Request, res: Response) => {
       user: { id: userId },
     });
 
-    res.json({ status: 200, length: lengthFinances, data: finances });
+    res.json({
+      status: 200,
+      length: lengthFinances,
+      data: finances,
+    });
   } catch (error) {
-    console.error(error);
-
     if (error.message === 'No metadata for "Finances" was found.') {
       res.status(204).send({ status: 204, length: 0, data: [] });
+
+      return;
     }
 
     res.status(500).json({
       status: 500,
       error: "Error fetching all finances from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
@@ -81,13 +86,21 @@ export const postFinance = async (req: Request, res: Response) => {
       },
     });
 
-    res.json({ status: 200, data: finance });
+    res.json({
+      status: 200,
+      data: {
+        ...finance,
+        user: finance.user.id,
+      },
+    });
   } catch (error) {
-    console.error("Error inserting a finance from the database:", error);
     res.status(500).json({
       status: 500,
       error: "Error inserting a finance from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
@@ -114,6 +127,9 @@ export const deleteFinance = async (req: Request, res: Response) => {
       status: 500,
       error: "Error deleting a finance from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };
 
@@ -142,10 +158,12 @@ export const putFinanceById = async (req: Request, res: Response) => {
       return;
     }
 
-    console.error("Error updating a finances from the database:", error);
     res.status(500).json({
       status: 500,
       error: "Error updating a finances from the database",
     });
+
+    Sentry.captureException(error);
+    Sentry.captureMessage(error.message);
   }
 };

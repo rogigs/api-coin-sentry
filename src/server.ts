@@ -1,8 +1,9 @@
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
 import cors from "cors";
 import express from "express";
 import financesRoutes from "./routes/auth/finances.routes";
 import userAuthRoutes from "./routes/auth/user.routes";
-
 import userRoute from "./routes/user.routes";
 
 import cookieParser from "cookie-parser";
@@ -15,6 +16,12 @@ const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
 
 const app = express();
+
+declare module "express-session" {
+  export interface SessionData {
+    userId: string | null;
+  }
+}
 
 app.use(cookieParser());
 app.use(
@@ -29,14 +36,23 @@ app.use(
     },
   })
 );
-declare module "express-session" {
-  export interface SessionData {
-    userId: string | null;
-  }
-}
+
+Sentry.init({
+  dsn: `https://${process.env.SENTRY_DSN_PUBLIC_KEY}@${process.env.SENTRY_ORG_SLUG}.ingest.sentry.io/${process.env.SENTRY_PROJECT_ID}`,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
+
+app.use(Sentry.Handlers.requestHandler());
+
+app.use(Sentry.Handlers.tracingHandler());
 
 app.use(express.json());
-
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -50,17 +66,19 @@ app.use(
 const PORT = process.env.PORT || 4000;
 
 // TODO: put this in a one archive
-app.use(
-  "/doc",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile, { customCssUrl: CSS_URL })
-);
 app.use("/api", userRoute);
 
 app.use("*", validateBearerToken);
 
 app.use("/api", financesRoutes);
 app.use("/api", userAuthRoutes);
+
+app.use(Sentry.Handlers.errorHandler());
+app.use(
+  "/doc",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, { customCssUrl: CSS_URL })
+);
 
 app.listen(PORT, () => {
   console.log(`Server on ${PORT}...`);
