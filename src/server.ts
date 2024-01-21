@@ -55,7 +55,11 @@ app.use(Sentry.Handlers.tracingHandler());
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      process.env.CLIENT_LOCAL,
+      process.env.CLIENT_QA,
+      process.env.CLIENT_PROD,
+    ],
     credentials: true,
     exposedHeaders: ["Authorization"],
     allowedHeaders: "Content-Type,Authorization,access-control-allow-headers",
