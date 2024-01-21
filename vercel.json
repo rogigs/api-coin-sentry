@@ -8,7 +8,11 @@
   ],
   "routes": [
     {
-      "src": "(.*)",
+      "src": "src/routes/(.*)",
+      "dest": "src/server.ts"
+    },
+    {
+      "src": "src/routes/auth/(.*)",
       "dest": "src/server.ts"
     }
   ]
