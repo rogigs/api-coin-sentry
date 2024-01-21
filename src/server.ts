@@ -53,12 +53,14 @@ app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
 app.use(express.json());
+// TODO: vercel doesnt pass the envirament variables
 app.use(
   cors({
     origin: [
       process.env.CLIENT_LOCAL,
       process.env.CLIENT_QA,
       process.env.CLIENT_PROD,
+      "https://coinsentry-git-feat-new-version-rogigs.vercel.app",
     ],
     credentials: true,
     exposedHeaders: ["Authorization"],
