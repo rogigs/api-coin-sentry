@@ -41,6 +41,7 @@ To run this project, you will need to add the following environment variables to
   TYPEORM_PASSWORD='your-password'
   TYPEORM_DATABASE='your-database'
   TYPEORM_HOST='your-host'
+  TYPEORM_PORT='your-port'
 
   SENTRY_DSN_PUBLIC_KEY='your-dsn'
   SENTRY_PROJECT_ID='your-project-id'

@@ -1,7 +1,6 @@
-import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import { DataSource } from "typeorm";
 import { Finances } from "../entities/finances.entities";
-import { CreateHistoric1693086244784 } from "./migrations/1693086244784-CreateHistoric";
 import { User } from "../entities/user.entities";
 
 dotenv.config();
