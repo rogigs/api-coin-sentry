@@ -1,11 +1,13 @@
 import { DataSource } from "typeorm";
-import { CreateHistoric1693086244784 } from "./migrations/1693086244784-CreateHistoric";
-import { Historic } from "../entities/Historic";
 import dotenv from "dotenv";
+import { Finances } from "../entities/finances.entities";
+import { CreateHistoric1693086244784 } from "./migrations/1693086244784-CreateHistoric";
+import { User } from "../entities/user.entities";
 
 dotenv.config();
 
-const connection = new DataSource({
+// TODO: make migration work
+const AppDataSource = new DataSource({
   type: "postgres",
   port: +process.env.TYPEORM_PORT,
   username: process.env.TYPEORM_USERNAME,
@@ -14,14 +16,13 @@ const connection = new DataSource({
   host: process.env.TYPEORM_HOST,
   synchronize: true,
   logging: true,
-  entities: [Historic],
+  migrations: [],
+  entities: [User, Finances],
   subscribers: [],
-  migrations: [CreateHistoric1693086244784],
   ssl: true,
 });
 
-connection
-  .initialize()
+AppDataSource.initialize()
   .then(() => {
     console.log(`Data Source has been initialized`);
   })
@@ -29,4 +30,4 @@ connection
     console.error(`Data Source initialization error`, err);
   });
 
-export default connection;
+export default AppDataSource;
