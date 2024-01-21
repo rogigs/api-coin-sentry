@@ -70,6 +70,12 @@ app.use(
 const PORT = process.env.PORT || 4000;
 
 // TODO: put this in a one archive
+app.use(
+  "/doc",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, { customCssUrl: CSS_URL })
+);
+
 app.use("/api", userRoute);
 
 app.use("*", validateBearerToken);
@@ -78,11 +84,6 @@ app.use("/api", financesRoutes);
 app.use("/api", userAuthRoutes);
 
 app.use(Sentry.Handlers.errorHandler());
-app.use(
-  "/doc",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile, { customCssUrl: CSS_URL })
-);
 
 app.listen(PORT, () => {
   console.log(`Server on ${PORT}...`);
