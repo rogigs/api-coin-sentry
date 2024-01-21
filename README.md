@@ -37,10 +37,20 @@ Start project
 To run this project, you will need to add the following environment variables to your .env file
 
 ```bash
-  PGHOST='your-host'
-  PGDATABASE='your-database'
-  PGUSER='your-user'
-  PGPASSWORD='your-password'
+  TYPEORM_USERNAME='your-username'
+  TYPEORM_PASSWORD='your-password'
+  TYPEORM_DATABASE='your-database'
+  TYPEORM_HOST='your-host'
+
+  SENTRY_DSN_PUBLIC_KEY='your-dsn'
+  SENTRY_PROJECT_ID='your-project-id'
+  SENTRY_ORG_SLUG='your-org-slug'
+
+  CLIENT_LOCAL='your-address-local'
+  CLIENT_QA='your-address-qa'
+  CLIENT_PROD='your-address-prod'
+
+  JWT_ACCESS_TOKEN_PUBLIC_KEY='your-token'
 ```
 
 ## Generate documentation
@@ -50,10 +60,3 @@ To generate documentation run the following command
 ```bash
   npm run docs
 ```
-
-## Roadmap
-
-1. Add routes ✅
-2. Add ORM
-3. Add documentation of API(Swagger)
-4. Add tests
