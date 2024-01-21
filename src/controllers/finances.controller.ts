@@ -4,14 +4,28 @@ import * as FinancesService from "../services/finances.service";
 
 export const getSumFinances = async (req: Request, res: Response) => {
   try {
-    const { sumInput, sumOutput } = await FinancesService.sumFinances({
+    const sum = await FinancesService.sumFinances({
       user: {
         id: req.session.userId,
       },
     });
 
-    const numberSumInput = Number(sumInput);
-    const numberSumOutput = Number(sumOutput);
+    if (!sum) {
+      res.json({
+        status: 204,
+        message: "No finances content for that user",
+        data: {
+          input: 0,
+          output: 0,
+          total: 0,
+        },
+      });
+
+      return;
+    }
+
+    const numberSumInput = Number(sum.input);
+    const numberSumOutput = Number(sum.output);
 
     res.json({
       status: 200,

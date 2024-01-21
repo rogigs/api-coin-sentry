@@ -1,6 +1,5 @@
 import AppDataSource from "../database/dataSource";
 import { Finances } from "../entities/finances.entities";
-import { User } from "../entities/user.entities";
 import { FinanceModel } from "../models/finances.model";
 import { Pagination } from "../types";
 import * as UsersService from "./user.service";
@@ -101,29 +100,17 @@ export const updateFinanceById = async ({
 export const sumFinances = async ({
   user: { id },
 }: Pick<FinanceModel, "user">) => {
-  let idToQuery = id;
-
-  // TODO: search reason that server-side doesn't persist session when API is called by client-side
-  // Bet: CORS problem
-  if (!idToQuery) {
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({
-      where: { id },
-    });
-    idToQuery = user.id;
-  }
-
   return await financeRepository
     .createQueryBuilder()
     .select(
       "SUM(CASE WHEN operation = :entrada THEN value_item ELSE 0 END)",
-      "sumInput"
+      "input"
     )
     .addSelect(
       "SUM(CASE WHEN operation = :saida THEN value_item ELSE 0 END)",
-      "sumOutput"
+      "output"
     )
     .where("user_id = :userId")
-    .setParameters({ entrada: "entrada", saida: "saida", userId: idToQuery })
+    .setParameters({ entrada: "entrada", saida: "saida", userId: id })
     .getRawOne();
 };
