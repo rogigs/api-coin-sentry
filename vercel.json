@@ -15,14 +15,5 @@
       "src": "/doc/(.*)",
       "dest": "src/server.ts"
     }
-  ],
-  "env": {
-    "CLIENT_LOCAL": "${dotenv:CLIENT_LOCAL}",
-    "CLIENT_QA": "${dotenv:CLIENT_QA}",
-    "CLIENT_PROD": "${dotenv:CLIENT_PROD}",
-    "JWT_ACCESS_TOKEN_PUBLIC_KEY": "${dotenv:JWT_ACCESS_TOKEN_PUBLIC_KEY}",
-    "SENTRY_DSN_PUBLIC_KEY": "${dotenv:SENTRY_DSN_PUBLIC_KEY}",
-    "SENTRY_ORG_SLUG": "${dotenv:SENTRY_ORG_SLUG}",
-    "SENTRY_PROJECT_ID": "${dotenv:SENTRY_PROJECT_ID}"
-  }
+  ]
 }
