@@ -111,6 +111,10 @@ export const sumFinances = async ({
       "output"
     )
     .where("user_id = :userId")
-    .setParameters({ entrada: "entrada", saida: "saida", userId: id })
+    .setParameters({
+      entrada: "entrada",
+      saida: "saida",
+      userId: id,
+    })
     .getRawOne();
 };

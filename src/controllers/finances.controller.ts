@@ -6,7 +6,7 @@ export const getSumFinances = async (req: Request, res: Response) => {
   try {
     const sum = await FinancesService.sumFinances({
       user: {
-        id: req.session.userId,
+        id: req.user.id,
       },
     });
 
@@ -32,7 +32,7 @@ export const getSumFinances = async (req: Request, res: Response) => {
       data: {
         input: numberSumInput,
         output: numberSumOutput,
-        total: numberSumOutput - numberSumInput,
+        total: numberSumInput - numberSumOutput,
       },
     });
   } catch (error) {
@@ -50,7 +50,7 @@ export const getFinances = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 0;
     const pageSize = parseInt(req.query.pageSize as string) || 10;
-    const userId = req.session.userId;
+    const userId = req.user.id;
 
     const finances = await FinancesService.findFinances({
       page,
@@ -96,7 +96,7 @@ export const postFinance = async (req: Request, res: Response) => {
       value_item,
       date_input,
       user: {
-        id: req.session.userId,
+        id: req.user.id,
       },
     });
 
@@ -123,7 +123,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
     const financeToDelete = await FinancesService.deleteFinanceById({
       id: req.params.id,
       user: {
-        id: req.session.userId,
+        id: req.user.id,
       },
     });
 
@@ -152,7 +152,7 @@ export const putFinanceById = async (req: Request, res: Response) => {
     const financeToUpdate = await FinancesService.updateFinanceById({
       id: req.params.id,
       user: {
-        id: req.session.userId,
+        id: req.user.id,
       },
       ...req.body,
     });

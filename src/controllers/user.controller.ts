@@ -60,8 +60,6 @@ export const authUser = async (req, res) => {
         process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY
       );
 
-      // TODO: Critical bug session.save is not async
-      // because of this the routes is not work corretc
       req.session.userId = user.id;
       req.session.save();
 

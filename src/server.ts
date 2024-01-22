@@ -26,13 +26,12 @@ declare module "express-session" {
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY,
-    resave: true,
-    saveUninitialized: true,
+    secret: "teste",
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-      httpOnly: true,
-      secure: true,
       sameSite: "none",
+      secure: true,
     },
   })
 );
