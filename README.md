@@ -32,6 +32,20 @@ Start project
   npm run start
 ```
 
+## Run Docker
+
+Build a image
+
+```bash
+  docker build -t api-coin-sentry:1.0 .
+```
+
+Run container
+
+```bash
+  docker run -d -p 4000:4000 api-coin-sentry:1.0
+```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
