@@ -4,19 +4,15 @@ import { UserModel } from "../models/user.model";
 
 const userRepository = AppDataSource.getRepository(User);
 
-//
 export const findUserById = async ({ id }: Pick<UserModel, "id">) => {
   return await userRepository.findOne({
     where: { id },
   });
 };
 
-export const findUserByEmailAndPassword = async ({
-  email,
-  password,
-}: Omit<UserModel, "id">) => {
+export const findUserByEmail = async ({ email }: Pick<UserModel, "email">) => {
   return await userRepository.findOne({
-    where: { email: email, password: password },
+    where: { email: email },
   });
 };
 

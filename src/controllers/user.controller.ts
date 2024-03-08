@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import * as UsersService from "../services/user.service";
@@ -43,46 +44,47 @@ export const logoutUser = async (req: Request, res: Response) => {
 // TODO: resolve types of cookies
 export const authUser = async (req, res) => {
   try {
-    const user = await UsersService.findUserByEmailAndPassword({
+    const user = await UsersService.findUserByEmail({
       email: req.body.email,
-      password: req.body.password,
     });
 
-    if (user) {
-      const accessToken = await jwt.sign(
-        user.toJSON(),
-        process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY,
-        { expiresIn: "1y" }
-      );
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    const isNotAuthorized = !isMatch || !user;
 
-      const refreshToken = await jwt.sign(
-        user.toJSON(),
-        process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY
-      );
-
-      req.session.userId = user.id;
-      req.session.save();
-
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: "production",
-        sameSite: "Strict",
-        expires: new Date(Date.now() + 31536000000),
-      });
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: "production",
-        sameSite: "Strict",
-      });
-
-      res.set("Authorization", `Bearer ${accessToken}`);
-
-      res.json({ status: 200, message: "Success to login" });
-
+    if (isNotAuthorized) {
+      res.json({ status: 401, message: "Email or password incorrect" });
       return;
     }
 
-    res.json({ status: 204, message: "Email or password incorrect" });
+    const accessToken = await jwt.sign(
+      user.toJSON(),
+      process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY,
+      { expiresIn: "1y" }
+    );
+
+    const refreshToken = await jwt.sign(
+      user.toJSON(),
+      process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY
+    );
+
+    req.session.userId = user.id;
+    req.session.save();
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: "production",
+      sameSite: "Strict",
+      expires: new Date(Date.now() + 31536000000),
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: "production",
+      sameSite: "Strict",
+    });
+
+    res.set("Authorization", `Bearer ${accessToken}`);
+
+    res.json({ status: 200, message: "Success to login" });
   } catch (error) {
     res.status(500).json({
       status: 500,
@@ -99,7 +101,10 @@ export const postUser = async (req: Request, res: Response) => {
   try {
     await UsersService.createUser({
       email: req.body.email,
-      password: req.body.password,
+      password: await bcrypt.hash(
+        req.body.password,
+        await bcrypt.genSaltSync(10)
+      ),
     });
 
     res.json({ status: 200, message: "Sucesso ao criar usuário" });
@@ -116,9 +121,8 @@ export const postUser = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const user = await UsersService.findUserByEmailAndPassword({
+    const user = await UsersService.findUserByEmail({
       email: req.body.email,
-      password: req.body.password,
     });
 
     if (user) {
