@@ -17,6 +17,7 @@
     "@types/express-session": "^1.17.10",
     "@types/uuid": "^9.0.2",
     "and": "^0.0.3",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
